@@ -1,7 +1,8 @@
 //Checkings Java Class
 import java.util.*;
+import java.io.*;
 
-class Checkings
+class Checkings implements Serializable
 {
 	public static void main(String args[])
 	{

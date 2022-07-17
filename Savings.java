@@ -1,8 +1,9 @@
 //Savings Class
 
 import java.util.*;
+import java.io.*;
 
-public class Savings extends Checkings
+public class Savings extends Checkings implements Serializable
 {
 	public static void main(String args[])
 	{

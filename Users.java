@@ -1,8 +1,9 @@
 //User Class
 //
 import java.util.*;
+import java.io.*;
 
-public class Users
+public class Users implements Serializable
 {
 	public static void main(String args[])
 	{
