@@ -55,14 +55,22 @@ class Checkings implements Serializable
 
 	public void makeWithdrawal(double withdrawal)
 	{
+		if(withdrawal > balance)
+		{
+			System.out.println("There aren't enough funds in your account.");
+		}//if statement
+		else
 		balance -= withdrawal;
-		//System.out.println("Your current balance is: ");
-		//System.out.println(balance);
 	}//withdrawal method
 
 	public double checkBalance()
 	{
 		return balance;
 	}//getter
+
+	void setBalance(double balance)
+	{
+		this.balance = balance;
+	}
 
 }//end of class

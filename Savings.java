@@ -9,34 +9,35 @@ public class Savings extends Checkings implements Serializable
 	{
 		Scanner input = new Scanner(System.in);
 		Savings savingsAccount = new Savings();
-		System.out.println("This is your balance: $"+savingsAccount.getPrinciple());
+		System.out.println("This is your balance: $"+savingsAccount.checkBalance());
 		System.out.println("Please enter a deposit: \n$");
 		double principle = input.nextDouble();
-		savingsAccount.setPrinciple(principle);
+		savingsAccount.makeDeposit(principle);
 		
 	}
 	private double principle;
-	private double interestRate;
+	private double interestRate;	
 	private double period;
-	private double interest;
+	//private double interest;
 
 
-	double getInterest()
+	/*double getInterest()
 	{
 		return interest;
-	}
+	}*/
 
-	double calculateInterest(int period)
+	double calculateInterest(double balance)
 	{
-		
+		principle = balance;
 		double interestC = principle*(1+interestRate*period);
-		return interestC;
+		principle  = interestC;
+		return principle;
 	}
 
-	void setInterest(double interest)
+	/*void setInterest(double interest)
 	{
 		this.interest = interest;
-	}
+	}*/
 
 	void setInterestRate(double interestRate)
 	{
@@ -58,20 +59,20 @@ public class Savings extends Checkings implements Serializable
 		return period;
 	}
 
-	void setPrinciple(double principle)
+/*	void setPrinciple(double principle)
 	{
-		this.principle = principle;
+		this.principle+=principle;
 	}
 
 	double getPrinciple()
 	{
 		return principle;
 	}
-
-	void applyInterest()
+*/
+	/*void applyInterest()
 	{
 		interest = principle*(1+interestRate*period);
-	}
+	}*/
 
 }//end class
 

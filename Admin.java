@@ -5,8 +5,10 @@ import java.util.*;
 
 public class Admin /*extends Users */implements Serializable
 {
+	static final String PATH = "/home/pi/JavaPrograms/BankOnIt/Accounts.txt";
 	public static void main(String args[])
 	{
+		File file = new File("Accounts.dat");
 		Scanner input = new Scanner(System.in);
 		Users user = new Users();
 		ArrayList<Users> arrayOfUsers = new ArrayList<Users>();
@@ -37,39 +39,12 @@ public class Admin /*extends Users */implements Serializable
 			break;
 			case 4:
 			newAdmin.applyInterest();
+			break;
 			case 5:
 			condition = false;
-
+			break;
 			}
 		}
-		//System.out.println("Hello world");
-		//System.out.println(arrayOfUsers.get(1).getAccountNumber());
-	/*try{	
-		FileInputStream fis = new FileInputStream("Accounts.dat");
-		ObjectInputStream ois = new ObjectInputStream(fis);
-		arrayOfUsers = (ArrayList<Users>) ois.readObject();
-		//System.out.println(arrayOfUsers.get(0).getAccountNumber());
-		user = arrayOfUsers.get(0);
-		System.out.println(user.getAccountNumber());
-
-		//wObject.close();
-		ois.close();
-		//wFile.close();
-		fis.close();
-	}catch (FileNotFoundException fnfe)
-	{
-		System.out.println("File Not Found");
-
-	}catch (IOException ioe)
-	{
-		System.out.println("Input Or Output Not Found");
-	}catch (ClassNotFoundException cnfe)
-	{
-		System.out.println("Object Not Found");
-
-	}*/
-
-
 	}
 	protected int numberOfUsers;
 	//protected ArrayList<Users> arrayOfUsers = new ArrayList<Users>();
@@ -81,6 +56,7 @@ public class Admin /*extends Users */implements Serializable
 	
 	public void addUser()
 	{
+		File file = new File("Accounts.dat");
 		Scanner input = new Scanner(System.in);
 		Users newUser = new Users();
 		ArrayList<Users> arrayOfUsers = new ArrayList<Users>();
@@ -88,24 +64,33 @@ public class Admin /*extends Users */implements Serializable
 		String accountNumberStr = input.nextLine();
 		//countNUmberInt = Integer.parseInt();
 		newUser.setAccountNumber(accountNumberStr);
-		
+		System.out.println("Please now enter a 5-digit pin for the account: ");
+		String PINStr = input.nextLine();
+		newUser.setPIN(PINStr);
 		try{
-		FileInputStream iFile = new FileInputStream("Accounts.dat");
+		if(!file.exists())
+		{
+			file.createNewFile();
+			FileOutputStream oFile = new FileOutputStream(file);
+			ObjectOutputStream oObject = new ObjectOutputStream(oFile);
+			oObject.writeObject(arrayOfUsers);
+			oObject.close();
+			oFile.close();
+		}
+		FileInputStream iFile = new FileInputStream(file);
 		ObjectInputStream iObject = new ObjectInputStream(iFile);
-		arrayOfUsers = (ArrayList<Users>)iObject.readObject();
-		arrayOfUsers.add(newUser);
-		//System.out.println("After error message");	
-
-		FileOutputStream oFile = new FileOutputStream("Accounts.dat");
-		//System.out.println("Before the error message");
-		ObjectOutputStream oObject = new ObjectOutputStream(oFile);
 		
+		arrayOfUsers = (ArrayList<Users>)iObject.readObject();
+		arrayOfUsers.add(newUser);	
+
+		FileOutputStream oFile = new FileOutputStream(file);
+		ObjectOutputStream oObject = new ObjectOutputStream(oFile);
 		oObject.writeObject(arrayOfUsers);
-		//System.out.println("After error message");
+
 		oObject.close();
 		oFile.close();
-			
-		numberOfUsers++;
+		iFile.close();
+		iObject.close();
 		}
 		catch(FileNotFoundException fnfe)
 		{
@@ -120,18 +105,18 @@ public class Admin /*extends Users */implements Serializable
 			System.out.println("Class not found");
 		}
 
-		//wFile.close();
 	}
 
 	public void deleteUser()
 	{
+		File file = new File("Accounts.dat");
 		ArrayList<Users> arrayOfUsers = new ArrayList<Users>();
 		Users currentUser = new Users();
 		Scanner input = new Scanner(System.in);
 		System.out.println("Enter the Account Number that you would like to delete:");
 		try{
 		int accountNumberforDeletion = input.nextInt();
-		FileInputStream iFile = new FileInputStream("Accounts.dat");
+		FileInputStream iFile = new FileInputStream(file);
 		ObjectInputStream iObject = new ObjectInputStream(iFile);
 
 		arrayOfUsers = (ArrayList<Users>) iObject.readObject();
@@ -146,20 +131,23 @@ public class Admin /*extends Users */implements Serializable
 			}else
 			{
 				currentUser = arrayOfUsers.get(i);
-				if(currentUser.getAccountNumber() == accountNumberforDeletion)
+				if(currentUser.getAccountNumber() == accountNumberforDeletion && currentUser.checkCheckingsBalance() == 0.00 && currentUser.checkSavingsBalance() == 0.00)
 				{
 					arrayOfUsers.remove(i);
 					System.out.println("Account "+accountNumberforDeletion +" was succesfully removed from the system");
-					numberOfUsers--;
 					condition = false;
 
 
+				}
+				else
+				{
+					System.out.println("The account "+accountNumberforDeletion+" still has funds and can't be erased");
 				}
 			}	
 			i++;
 		}
 		while(condition);
-		FileOutputStream oFile = new FileOutputStream("Accounts.dat");
+		FileOutputStream oFile = new FileOutputStream(file);
 		ObjectOutputStream oObject = new ObjectOutputStream(oFile);
 		oObject.writeObject(arrayOfUsers);
 
@@ -169,7 +157,7 @@ public class Admin /*extends Users */implements Serializable
 		oFile.close();
 		}
 		catch(IOException ioe){System.out.println("IO Exception");}
-		catch(ClassNotFoundException ioe){System.out.println("IO Exception");}
+		catch(ClassNotFoundException ioe){System.out.println("Class not found exception Exception");}
 		//numberOfUsers--;
 	}
 
@@ -215,6 +203,49 @@ public class Admin /*extends Users */implements Serializable
 
 	public void applyInterest()
 	{
+		ArrayList<Users> arrayOfUsers = new ArrayList<>();
+		Users user = new Users();
+		File file = new File("Accounts.dat");
+		try
+		{
+		if(!file.exists())
+		{
+			file.createNewFile();
+		}
+		FileInputStream iFile = new FileInputStream(file);
+		ObjectInputStream iObject = new ObjectInputStream(iFile);
+
+		arrayOfUsers = (ArrayList) iObject.readObject();	
+		if(arrayOfUsers.size() != 0)
+		{
+		for(int i = 0;i < arrayOfUsers.size();i++)
+		{
+			user = arrayOfUsers.get(i);
+			System.out.println(user.checkSavingsBalance());
+			user.calculateInterest(1);
+			System.out.println(user.checkSavingsBalance());
+		}//end of for loop
+			FileOutputStream oFile = new FileOutputStream(file);
+			ObjectOutputStream oObject = new ObjectOutputStream(oFile);
+			oObject.writeObject(arrayOfUsers);
+			iObject.close();
+			iFile.close();
+			oObject.close();
+			oFile.close();
+
+
+
+		System.out.println("Interest has been applied to all accounts!");
+		}
+		else
+		{
+			System.out.println("There are no accounts stored");
+		}
+
+
+		}
+		catch(IOException ioe){System.out.println("Input not found");}
+		catch(ClassNotFoundException cnfe){System.out.println("Class not found");}
 	}
 
 }//class end
