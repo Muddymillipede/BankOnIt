@@ -94,9 +94,14 @@ public class LogIn
 						currentUser = arrayOfUsers.get(i);
 						if (Integer.parseInt(accountNumberEntered) == currentUser.getAccountNumber())
 						{
+							System.out.println("Now enter the account PIN: ");
+							String PIN = input.nextLine();
+							if(Integer.parseInt(PIN) == currentUser.getPIN())
+							{
 							login.userMenu(i);
 							condition = false;
 							condition2 = false;
+							}
 						}//if end
 						i++;
 					}//else end
@@ -166,6 +171,7 @@ public class LogIn
 
 	void userMenu(int i)
 	{
+		//FileRW filerw = new FileRW();
 		LogIn login = new LogIn();
 		ArrayList<Users> arrayOfUsers = new ArrayList<Users>();
 		Users user = new Users();
@@ -248,6 +254,7 @@ public class LogIn
 
 	void checkingsMenu(int i)
 	{
+		FileRW filerw = new FileRW();
 		ArrayList<Users> arrayOfUsers = new ArrayList<Users>();
 		Users user = new Users();
 		Scanner input = new Scanner(System.in);
@@ -291,15 +298,20 @@ public class LogIn
 				double deposit = input.nextDouble();
 				user.makeCheckingsDeposit(deposit);
 				System.out.println("Your new balance is: $"+user.checkCheckingsBalance());
+				filerw.writeObjectOnFile(arrayOfUsers);
 			break;
 			case 2:
 				System.out.println("How much would you like to withdraw?");
 				double withdrawal = input.nextDouble();
 				user.makeCheckingsWithdrawal(withdrawal);
 				System.out.println("Your new balance is: $"+user.checkCheckingsBalance());
+				filerw.writeObjectOnFile(arrayOfUsers);
+
 				break;
 			case 3:
 				System.out.println("Your current balance is: $"+user.checkCheckingsBalance());
+				filerw.writeObjectOnFile(arrayOfUsers);
+
 				break;
 			case 4:
 				condition = false;

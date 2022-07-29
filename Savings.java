@@ -16,8 +16,8 @@ public class Savings extends Checkings implements Serializable
 		
 	}
 	private double principle;
-	private double interestRate;	
-	private double period;
+	private double interestRate = 1.01;	
+	private double period = 1;
 	//private double interest;
 
 

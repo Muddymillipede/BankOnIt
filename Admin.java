@@ -222,7 +222,7 @@ public class Admin /*extends Users */implements Serializable
 		{
 			user = arrayOfUsers.get(i);
 			System.out.println(user.checkSavingsBalance());
-			user.calculateInterest(1);
+			user.makeSavingsDeposit(user.calculateInterest(user.checkSavingsBalance()));
 			System.out.println(user.checkSavingsBalance());
 		}//end of for loop
 			FileOutputStream oFile = new FileOutputStream(file);

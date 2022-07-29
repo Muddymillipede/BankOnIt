@@ -79,10 +79,10 @@ public class Users implements Serializable
 	}
 
 
-	void calculateInterest(double balance)
+	double calculateInterest(double balance)
 	{
 		//Savings savingsAccount = new Savings();
-		savingsAccount.calculateInterest(balance);
+		return savingsAccount.calculateInterest(balance);
 
 	}//end calculate interest
 
